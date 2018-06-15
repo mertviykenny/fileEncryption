@@ -60,7 +60,7 @@ public class mainForm extends javax.swing.JFrame {
         initComponents();
     }
 
-    String getFileExtension(File file) {
+    public String getFileExtension(File file) {
         if (file == null) {
             return "";
         }
@@ -501,25 +501,25 @@ File inputFile;
                     byte[] encrypted_data = null;
 
                     IV_generated = null;
-                    if (modeComboBox.getSelectedItem().toString() == "ECB") {
+                    if (modeComboBox.getSelectedItem().toString().equals("ECB")) {
                         encrypted_data = ecbEncrypt(key, data);
                         Files.write(new File(output_name_and_extension).toPath(), encrypted_data);
                         String encodedKey = Base64.getEncoder().encodeToString(key.getEncoded());
                         writeXML(manifest_name, "AES", Integer.parseInt(keySizeComboBox.getSelectedItem().toString()), 128, "ECB", encodedKey, getFileExtension(inputFile), IV_generated);
                     }
-                    if (modeComboBox.getSelectedItem().toString() == "CBC") {
+                    if ("CBC".equals(modeComboBox.getSelectedItem().toString())) {
                         encrypted_data = cbcEncrypt(key, data);
                         Files.write(new File(output_name_and_extension).toPath(), encrypted_data);
                         String encodedKey = Base64.getEncoder().encodeToString(key.getEncoded());
                         writeXML(manifest_name, "AES", Integer.parseInt(keySizeComboBox.getSelectedItem().toString()), 128, "CBC", encodedKey, getFileExtension(inputFile), IV_generated);
                     }
-                    if (modeComboBox.getSelectedItem().toString() == "CFB") {
+                    if ("CFB".equals(modeComboBox.getSelectedItem().toString())) {
                         encrypted_data = cfbEncrypt(key, data);
                         Files.write(new File(output_name_and_extension).toPath(), encrypted_data);
                         String encodedKey = Base64.getEncoder().encodeToString(key.getEncoded());
                         writeXML(manifest_name, "AES", Integer.parseInt(keySizeComboBox.getSelectedItem().toString()), 128, "CFB", encodedKey, getFileExtension(inputFile), IV_generated);
                     }
-                    if (modeComboBox.getSelectedItem().toString() == "OFB") {
+                    if ("OFB".equals(modeComboBox.getSelectedItem().toString())) {
                         encrypted_data = ofbEncrypt(key, data);
                         Files.write(new File(output_name_and_extension).toPath(), encrypted_data);
                         String encodedKey = Base64.getEncoder().encodeToString(key.getEncoded());
@@ -663,8 +663,7 @@ File inputFile;
         dialog.setVisible(true); // to visible the dialog 
     }
 
-    private boolean passwordIsOk() {
-        String pass = PasswordTextField.getText();
+    public boolean passwordIsOk(String pass) {
         if (pass.length() >= 8) {
             if (pass.matches("(.*[A-Z].*)")) {
                 if (pass.matches("(.*[0-9].*)")) {
@@ -674,7 +673,6 @@ File inputFile;
                 }
             }
         }
-
         return false;
     }
 
@@ -738,7 +736,7 @@ File inputFile;
     }
     private void adduserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adduserActionPerformed
         if (fileSelected) {
-            if (passwordIsOk()) {
+            if (passwordIsOk(PasswordTextField.getText())) {
                 generateKeysForUser(userNameTextBox.getText());
                 EncryptPrivateKeyWithAes(userNameTextBox.getText());
                 userComboBox.addItem(userNameTextBox.getText());
